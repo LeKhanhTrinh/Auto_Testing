@@ -29,6 +29,13 @@ public class WebdriverCommand {
 	Transition_list transitionList = new Transition_list(); // danh sach cac transition
 	State beginState = new State();	//trang thai bat dau cua mot SM
 	State_list endStateList = new State_list();	//danh sach cac trang thai ket thuc cua mot SM
+	ArrayList<String> testPath = new ArrayList<String>();
+	ArrayList<String> theResult = new ArrayList<String>();
+	ArrayList<String> detail = new ArrayList<String>();
+	
+	String testPathS = "";
+	String theResultS = "";
+	String detailS = "";
 	
 	int numOfTest;
 	
@@ -150,10 +157,11 @@ public class WebdriverCommand {
 	
 	
 	
-	
+	//Dang dung
 	public boolean my_run_withURL(String url, int nsleep, boolean log, int test_c){
 		boolean res = true;
 		int index = 0;
+		
 		
 		System.out.println("runing:");
 		textRS += "runing:\n";
@@ -170,6 +178,10 @@ public class WebdriverCommand {
 		for (int i=0; i<transqlist.getSize(); i++){
 			TransitionSequences transq =transqlist.getTransitionByIndex(i);
 			
+			testPathS = "";
+			theResultS = "";
+			detailS = "";
+			
 			boolean next = false;
 			driver.get(url);
 			//index = i;
@@ -178,17 +190,21 @@ public class WebdriverCommand {
 				System.err.println("\n\nFAIL HERE");
 				textRS += "\n\nFAIL HERE!!\n";
 				textFail += "\n\nFAIL HERE!!\n";
+				theResultS += "IGNORE\n";
+				detailS += "Ignore this test path.\n";
 			}
 			
 			
 			
-			
+			//In chi tiet tung chuyen trang thai
+			//Kiem tra IGNORE nhung test path khong can thiet
 			if (log){
 				if (next){
 					//System.err.println("So index = " + index);
 					System.err.print("Test path "+(index+1)+": ");
 					textRS += "Test path "+(index+1)+": "+transq.getTransitionByIndex(0).getBeginState().getName();
 					textFail += "Test path "+(index+1)+": "+transq.getTransitionByIndex(0).getBeginState().getName();
+					testPathS += "Test path "+(index+1)+": "+transq.getTransitionByIndex(0).getBeginState().getName();
 					System.err.print(transq.getTransitionByIndex(0).getBeginState().getName());
 					
 					for (int j=0; j<transq.getSize(); j++){
@@ -202,18 +218,23 @@ public class WebdriverCommand {
 						System.err.print("*"+e.name+"="+s2.name);
 						textRS += "*"+e.name+"="+s2.name;
 						textFail += "*"+e.name+"="+s2.name;
+						testPathS += "*"+e.name+"="+s2.name;
 					}
 					System.out.println();
 					textRS += "\n";
 					textFail += "\n";
+					testPathS += "\n";
 					//index++;
 					//continue;
 				}else{
 					//System.out.println("So index = " + index);
 					System.out.print("Test path "+(index+1)+": ");
 					textRS += "Test path "+(index+1)+": ";
+					testPathS += "Test path "+(index+1)+": ";
 					System.out.print(transq.getTransitionByIndex(0).getBeginState().getName());
 					textRS += transq.getTransitionByIndex(0).getBeginState().getName();
+					testPathS += transq.getTransitionByIndex(0).getBeginState().getName();
+					
 					for (int j=0; j<transq.getSize(); j++){
 						Transition tran = transq.getTransitionByIndex(j);
 						//tran.changeTrans(driver, test_c);
@@ -224,9 +245,11 @@ public class WebdriverCommand {
 						
 						System.out.print("*"+e.name+"="+s2.name);
 						textRS += "*"+e.name+"="+s2.name;
+						testPathS += "*"+e.name+"="+s2.name;
 					}
 					System.out.println();
 					textRS += "\n";
+					testPathS += "\n";
 				}
 
 				index++;
@@ -249,9 +272,12 @@ public class WebdriverCommand {
 					//System.out.println("\tFAIL TEST PATH: " + (j+1) + "\n");
 					textRS += "\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
 					textFail += "\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
+					detailS += "FAIL:\n\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
 					System.err.println("\tFAIL");
 					textRS += "\tFAIL\n\n\n";
 					textFail += "\tFAIL\n\n\n";
+					theResultS = "FAIL\n";
+					
 					break;
 
 					
@@ -273,6 +299,8 @@ public class WebdriverCommand {
 					} catch (Exception err){
 						passone = false;
 						System.out.println("FAIL EVENT");
+						theResultS = "FAIL\n";
+						detailS += "FAIL EVENT:	Event couldn't do.\n";
 						break;
 					}
 					// check state sau do
@@ -280,6 +308,8 @@ public class WebdriverCommand {
 						passone = false;
 						textFail += "\n\nFAIL HERE!!\n";
 						textFail += "FAIL STATE: \"" + s2.getName() + "\" (We can't found this state)\n";
+						theResultS = "FAIL\n";
+						detailS += "FAIL STATE: \"" + s2.getName() + "\" (We can't found this state)\n";
 						System.out.println("FAIL STATE");
 						break;
 					}
@@ -323,6 +353,13 @@ public class WebdriverCommand {
 				textRS += "\n";
 			}
 			
+			testPath.add(testPathS);
+			if (!theResultS.equals("")){
+				theResult.add(theResultS);
+			}else{
+				theResult.add("PASS\n");
+			}
+			detail.add(detailS);
 		}
 		
 		textFail += "--------------------------------------------------------------------------";
@@ -642,8 +679,8 @@ public class WebdriverCommand {
         	String elem_id = sheet.getCell(2, i+2+nelem+2+nstate+2).getContents().trim();
         	String action = sheet.getCell(3, i+2+nelem+2+nstate+2).getContents().trim();
         	
-        	eventList.addEvent(new Event(name, Integer.valueOf(elem_id).intValue(), action, elemHtmlList));
-        	//eventList.addEvent(new Event(name, elem_id, action, elemHtmlList));
+        	//eventList.addEvent(new Event(name, Integer.valueOf(elem_id).intValue(), action, elemHtmlList));
+        	eventList.addEvent(new Event(name, elem_id, action, elemHtmlList));
         }
         
         System.out.println("Number of events: "+eventList.getSize());
@@ -692,12 +729,16 @@ public class WebdriverCommand {
 			WritableWorkbook workbook1 = Workbook.createWorkbook(file);
 			WritableSheet sheet1 = workbook1.createSheet("First Sheet", 0); 
 			
-			for (int i = 0 ; i < fsm.getNumOfTest() ; i++){
-				Label column = new Label(i, 0, textRS);
-				sheet1.addCell(column);
-				workbook1.write();
-				workbook1.close();
+			for (int i=0 ; i<testPath.size() ; i++){
+				Label tp = new Label(0, i, testPath.get(i));
+				Label rs = new Label(1, i, theResult.get(i));
+				Label dt = new Label(2, i, detail.get(i));
+				sheet1.addCell(tp);
+				sheet1.addCell(rs);
+				sheet1.addCell(dt);
 			}
+			workbook1.write();
+            workbook1.close();
 		}catch(Exception ex){
 			
 		}

@@ -50,8 +50,8 @@ public class Event {
 	public void doEvent(WebDriver driver, int test_current) {
 		//System.out.println("doing event called");
 		try{
-			Element_html elem = elem_html_list.getElementById(element_id);
-			//Element_html elem = elem_html_list.getElementByName(element_html_id);
+			//Element_html elem = elem_html_list.getElementById(element_id);
+			Element_html elem = elem_html_list.getElementByName(element_html_id);
 			WebElement webelem = driver.findElement(By.id(elem.getHtml_id()));
 			
 			if (this.action.compareTo(Webdriver_actionType.ADDTEXT)==0){
