@@ -731,8 +731,8 @@ public class WebdriverCommand {
 			
 			for (int i=0 ; i<testPath.size() ; i++){
 				Label tp = new Label(0, i, testPath.get(i));
-				Label rs = new Label(1, i, theResult.get(i));
-				Label dt = new Label(2, i, detail.get(i));
+				Label rs = new Label(5, i, theResult.get(i));
+				Label dt = new Label(8, i, detail.get(i));
 				sheet1.addCell(tp);
 				sheet1.addCell(rs);
 				sheet1.addCell(dt);
