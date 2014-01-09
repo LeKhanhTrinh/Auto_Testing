@@ -88,6 +88,11 @@ public class FSM_G {
 		return stateList.getStateByIndex(index).getName();
 	}
 	
+	//Get name by index
+	public String getNameEndStateByIndex(int index){
+		return endStateList.getStateByIndex(index).getName();
+	}
+		
 	//Get index Begin State
 	public int getIndexBeginStateOfTransition(int i){
 		return getIndexOfState(transitionList.getTransitionByIndex(i).getBeginState().getName());
@@ -140,7 +145,9 @@ public class FSM_G {
 		return endStateList;
 	}
 	
-	
+	public int getSizeOfEndStateList(){
+		return endStateList.getSize();
+	}
 	//------------------------------------------------------------------------------------------
 	//Ham SET
 	//------------------------------------------------------------------------------------------
@@ -200,6 +207,11 @@ public class FSM_G {
 	public void printAll(){
 		System.out.println("G - State number:" + stateList.getSize());
 		System.out.println("G - Transition number:" + transitionList.getSize());
+	}
+	
+	
+	public void printBeginState(){
+		System.out.println("BEGIN STATE:\t" + beginState.getName() + "\n");
 	}
 	
 	public void printEndState(){

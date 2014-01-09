@@ -1,0 +1,56 @@
+13/8:
+Yêu cầu:
+1. Nối các FSM của nhiều trang thành một FSM.
+2. FSM phải có trạng thái khởi đầu và trạng thái kết thúc.
+3. Sửa phần đầu vào, tạo giao diện tương tác.
+
+16/8:
+- Chỉnh sửa FSM để có trạng thái khởi đầu và kết thúc. (Done)
+Yêu cầu:
+- Ghép các FSM con như thế nào?
+
+20/8:
+Thực hiện ghép các FSM:
+- id ở các file phải khác nhau (trang 1 có element mà id của nó là ei, 
+	thì các trang sau không có element nào có id như vậy).
+
+- Thiết kế lại file excel đầu vào.
+
+22/8: Tư tưởng mới:
+Lấy toàn bộ các trạng thái của mỗi FSM con, nếu tìm thấy beginState của
+máy này là một trong các endState của máy kia thì tự động match vào và
+chạy.
+
+Value Test: Số testcase và vị trí ở trong file excel thuộc cùng một bộ test
+phải tương đương nhau.
+
+Các trang web được test theo tuyến tính
+
+25/8: Tạo test với checkbox
+Thành công khi test checkbox, value = 1 hoặc "_" -> luôn chạy test checkbox
+
+26/8: Tạo test với radiobox
+Lưu ý:
+- Cách đặt giá trị giống checkbox
+- Giả sử có k hàng, mỗi hàng n radiobox thì tổng state để kiểm tra hết là
+n^k + k*n
+
+1/11: Xây dựng bộ web mới
+Yêu cầu:
+- Web viết bằng JSF
+- Web động
+
+8/11: Xây dựng bộ test mới
+Xây dựng bộ test mới cho trang web
+
+13/12: Thay đổi thiết kế excel
+- State: thay value = o, "_" = ""
+- Quy ước lại type của các phần tử web
+- Test từng trang
+- Export kết quả ra excel
+
+6/1: Phát hiện lỗi về thuật toán
+- Thuật toán bị sai: 
+	+ Duyệt theo đỉnh nên bỏ thiếu nhiều cạnh.
+	+ Đỉnh kết thúc không phải là endState
+	+ Nếu một cặp State [a,b] có nhiều transition thì giải quyết thế nào?

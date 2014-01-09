@@ -27,6 +27,14 @@ public class path {
 		return arrPath.get(index);
 	}
 	
+	public int getSizeByIndex(int index){
+		return arrPath.get(index).size();
+	}
+	
+	public int getLastElemFromPathNumber(int index){
+		return arrPath.get(index).get(arrPath.get(index).size()-1);
+	}
+	
 	public ArrayList<Integer> getIfEndBy(int e){
 		int ai=0;
 		int al=0;
@@ -102,6 +110,11 @@ public class path {
 		}
 	}
 	
-	
+	public void printSomeThingsOfPath(){
+		System.out.println("About PATH: ");
+		for (int i=0; i<arrPath.size(); i++){
+			System.out.println("Size:\t" + getSizeByIndex(i) + "\tEnd:\t" + getLastElemFromPathNumber(i));
+		}
+	}
 	
 }

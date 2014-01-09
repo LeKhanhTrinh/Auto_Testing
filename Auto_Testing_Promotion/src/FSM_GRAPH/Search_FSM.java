@@ -11,13 +11,14 @@ public class Search_FSM {
 	ArrayTransList[][] arrTranLists;
 	int N;
 	int [] overState;
-	
+	ArrayList<Integer> arrEndSt;
+	ArrayList<Integer> addMore;
 	ArrayList<Integer> arr;
 	
 	public Search_FSM(FSM_G fsm){
 		arr = new ArrayList<Integer>();
-		
-		
+		arrEndSt = new ArrayList<Integer>();
+		addMore = new ArrayList<Integer>();
 		N = fsm.getNumberOfState();
 		
 		System.out.println("N= " + N);
@@ -56,6 +57,10 @@ public class Search_FSM {
 			}
 		}
 		
+		//Lay cac gia tri cua endStateList
+		for (int i=0 ; i<fsm.getSizeOfEndStateList() ; i++){
+			
+		}
 		
 		//System.out.println("fsm.getNumberOfTransition()"+fsm.getNumberOfTransition());
 		//System.out.println("FSM_G number of transition: " + fsm.getNumberOfTransition());
@@ -68,15 +73,28 @@ public class Search_FSM {
 			overTransition[a][b] = 2;
 			//countTransition[a][b]++;
 			arrTranLists[a][b].Add(fsm.getNameOfTransitioin(i));
-			System.out.println("Vi tri: [" + a + ", " + b + "] = " + mapTransition[a][b]);
+			//System.out.println("Vi tri: [" + a + ", " + b + "] = " + mapTransition[a][b]);
 			//System.out.println(i + "." + fsm.getNameBeginStateOfTransition(i) + "--" + fsm.getNameOfTransitioin(i) + "-->" + fsm.getNameEndStateOfTransition(i));
 		}
 		
-		for (int i=0 ; i<N ; i++){
-			for (int j=0 ; j<N ; j++){
+		for (int i=0 ; i<fsm.getSizeOfEndStateList() ; i++){
+			/*for (int j=0 ; j<N ; j++){
+				
 				if (!arrTranLists[i][j].IsEmpty())
 					System.out.println("Test: [" + i + ", " + j + "] = " + arrTranLists[i][j].printAll());
 			}
+			*/
+			String tempName = fsm.getNameEndStateByIndex(i);
+			for (int j=0 ; j<N ; j++){
+				if (tempName.equals(fsm.getNameStateByIndex(j))){
+					arrEndSt.add(j);
+				}
+			}
+		}
+		
+		System.out.println("END STATE LIST:");
+		for (int i=0 ; i<arrEndSt.size() ; i++){
+			System.out.println(arrEndSt.get(i));
 		}
 		//System.out.println("``````");
 		
@@ -89,12 +107,18 @@ public class Search_FSM {
 		arr.clear();
 		arr.add(0);
 		DFS(0, PATH);
-		//PATH.sort();
+		addToPath(PATH);
+		PATH.sort();
 		//addPath(PATH);
 		//PATH.sort();
+		printCheck();
 		PATH.printPath();
+		//PATH.printSomeThingsOfPath();
+		//addToPathAfter(18);
+		printList();
 		return PATH;
 	}
+	
 	
 	//Xoa phan danh dau dinh
 	private void DFS(int i, path PATH){
@@ -110,7 +134,7 @@ public class Search_FSM {
 				
 				//overState[j]=1;
 				arrTranLists[i][j].RemoveHead();
-				if (!arrTranLists[i][j].IsEmpty()){
+				if (arrTranLists[i][j].IsEmpty()){
 					overTransition[i][j]=1;
 				}
 				arr.add(j);
@@ -122,10 +146,79 @@ public class Search_FSM {
 		}
 		//}
 		if (t==0){
+			System.out.println();
 			PATH.Add(arr);
 			//arr = new ArrayList();
 		}
 		
+	}
+	
+	//Kiem tra
+	public void printCheck(){
+		System.out.println("CHECK DUYET");
+		for (int i=0 ; i<N ; i++){
+			for (int j=0 ; j<N ; j++){
+				if (overTransition[i][j] != 0)
+					System.out.println("["+ i + "," + j +"]" + overTransition[i][j]);
+			}
+		}
+	}
+	
+	//In chuoi bat dau tu mot vi tri i
+	public void printList(){
+		System.out.println("Chuoi sau khi them");
+		
+		for (int j=0 ; j<addMore.size() ; j++){
+			System.out.print(addMore.get(j) + " ");
+		}
+		System.out.println();
+	}
+	
+	
+	public void addToPath(path PATH){
+		for (int i=0 ; i<PATH.getSize() ; i++){
+			if (!inEndStateList(PATH.getLastElemFromPathNumber(i), arrEndSt)){
+				addToPathAfter(PATH.getLastElemFromPathNumber(i));
+				for (int j=0 ; j<addMore.size() ; j++){
+					PATH.getListByIndex(i).add(addMore.get(j));
+				}
+				while (!addMore.isEmpty()){
+					addMore.remove(0);
+				}
+			}
+		}
+	}
+	
+	// Them state vao path
+	public void addToPathAfter(int i){
+		//int i = PATH.getLastElemFromPathNumber(pathNumb);
+		
+
+		//System.out.println("check T/F: " + i + " / " + inEndStateList(i, arrEndSt));
+		if (inEndStateList(i, arrEndSt) == true){
+			return ;
+		}
+		
+		for (int j=0; j<N; j++){
+			if (mapTransition[i][j].length() > 0 && overTransition[i][j] == 1){
+				overTransition[i][j] = 3;
+				addMore.add(j);
+				System.out.println("IAM HERE: " + j);
+				addToPathAfter(j);
+				break;
+			}
+		}
+		
+		
+	}
+	
+	public boolean inEndStateList(int gt, ArrayList<Integer> listInt){
+		for (int i=0 ; i<listInt.size() ; i++){
+			if (gt == listInt.get(i)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void addPath(path PATH){
