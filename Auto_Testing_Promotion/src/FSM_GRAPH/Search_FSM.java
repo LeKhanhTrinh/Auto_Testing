@@ -111,7 +111,7 @@ public class Search_FSM {
 		PATH.sort();
 		//addPath(PATH);
 		//PATH.sort();
-		printCheck();
+		//printCheck();
 		PATH.printPath();
 		//PATH.printSomeThingsOfPath();
 		//addToPathAfter(18);
@@ -178,6 +178,7 @@ public class Search_FSM {
 	public void addToPath(path PATH){
 		for (int i=0 ; i<PATH.getSize() ; i++){
 			if (!inEndStateList(PATH.getLastElemFromPathNumber(i), arrEndSt)){
+				System.out.println("i=" + i);
 				addToPathAfter(PATH.getLastElemFromPathNumber(i));
 				for (int j=0 ; j<addMore.size() ; j++){
 					PATH.getListByIndex(i).add(addMore.get(j));
