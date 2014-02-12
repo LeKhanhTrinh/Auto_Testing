@@ -1,4 +1,4 @@
-package TestPath2Webdriver;
+package backup;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,23 @@ public class Condition_list {
 		}
 	}
 	
+	
+	/*
+	 * Tao mot ham xu ly dieu kien moi:
+	 * - Dau vao la string trong transition va endState
+	 * - 
+	 */
+	public void newProcess(String input, String endState){
+		int moNgoac, dongNgoac;
+		String event = "";
+		String conds = "";
+		moNgoac = input.indexOf("[");
+		dongNgoac = input.indexOf("]");
+		event = input.substring(dongNgoac+1, input.length());
+		conds = input.substring(moNgoac+1, dongNgoac);
+		findSubCom(conds, ",");
+	}
+	
 	//tach hoan chinh thanh cac SubCompo
 	public void findCompo(String input){
 		String state="";
@@ -59,7 +76,7 @@ public class Condition_list {
 			}
 			
 			//addSubCompo(new SubCompo(state, tempId, tempValue,endSt));
-			arr_compo.add(new Condition(state, tempId, tempValue,endSt));
+			arr_compo.add(new Condition(state, tempId, tempValue, endSt));
 		}else{
 			arr_compo.add(new Condition(null, null, null, null));
 		}

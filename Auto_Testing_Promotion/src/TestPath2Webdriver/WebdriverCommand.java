@@ -690,12 +690,13 @@ public class WebdriverCommand {
         for (int i=0; i<ntrans; i++){
         	//cellstring
         	for (int j=0; j<nstate; j++){
-        		String cellString = sheet.getCell(2, i+2+nevent+2+nelem+2+nstate+2).getContents().trim();
+        		//String cellString = sheet.getCell(2, i+2+nevent+2+nelem+2+nstate+2).getContents().trim();
         		//System.out.println("Sheet Condition:" + j + "\t" + cellString);
-        		String enames = sheet.getCell(j+3,i+2+nevent+2+nelem+2+nstate+2).getContents().trim();	//Dich lui 1 cot
+        		String eventNConds = sheet.getCell(j+2,i+2+nevent+2+nelem+2+nstate+2).getContents().trim();	//Dich lai 1 cot
         		String s1name = sheet.getCell(1,i+2+nevent+2+nelem+2+nstate+2).getContents().trim();
-        		String s2name = sheet.getCell(j+3,1+nevent+2+nelem+2+nstate+2).getContents().trim();	//Dich lui 1 cot
+        		String s2name = sheet.getCell(j+2,1+nevent+2+nelem+2+nstate+2).getContents().trim();	//Dich lai 1 cot
         		
+        		/*
         		if (enames.length() == 0){
         			enames = "_";
         		}
@@ -704,16 +705,27 @@ public class WebdriverCommand {
         			cellString = "_";
         		}
         		
-        		ArrayList<String> ename = new ArrayList<String>();
-        		ename = subEvents(enames);
+        		*/
+        		
+        		if (eventNConds.length() == 0){
+        			eventNConds = "_";
+        		}
+        		
+        		ArrayList<String> ECnames = new ArrayList<String>();
+        		ECnames = subEvents(eventNConds); //List cac event va condition
+        		
         		//System.out.println(s1name + "--" + ename + "-->" + s2name + " :\t" + cellString);
-        		for (int k=0 ; k<ename.size() ; k++){
-        			if (ename.get(k).length()==0 || ename.get(k).compareTo("_")==0){
+        		for (int k=0 ; k<ECnames.size() ; k++){
+        			if (ECnames.get(k).length()==0 || ECnames.get(k).compareTo("_")==0){
             			continue;
             		}
-        			transitionList.addTransition(new Transition(eventList.getEventByName(ename.get(k)), 
+        			
+        			String eName = getNameEvent(ECnames.get(k));
+        			Condition cond = getCond(ECnames.get(k));
+        			System.out.println("Name Event: " + eName);
+        			transitionList.addTransition(new Transition(eventList.getEventByName(eName), 
             				stateList.getStateByName(s1name), 
-            				stateList.getStateByName(s2name), cellString));
+            				stateList.getStateByName(s2name), cond));
         		}
         	}
         	
@@ -785,4 +797,31 @@ public class WebdriverCommand {
 		driver.quit();
 	}
 
+	public String getNameEvent(String input){
+		String temp = "";
+		if (input.indexOf("]") >= 0){
+			temp = input.substring(input.indexOf("]")+1, input.length());
+		}else{
+			temp = input;
+		}
+		
+		return temp;
+	}
+	
+	public Condition getCond(String input){
+		int moNgoac = input.indexOf("[");
+		int dongNgoac = input.indexOf("]");
+		String conds = "";
+		Condition conditions;
+		if (moNgoac >= 0 && dongNgoac > moNgoac){
+			conds = input.substring(moNgoac+1, dongNgoac);
+			int gachCheo = conds.indexOf("/");
+			String id = conds.substring(0, gachCheo);
+			String values = conds.substring(gachCheo+1, conds.length());
+			conditions = new Condition(id, values);
+		}else{
+			conditions = new Condition();
+		}
+		return conditions;
+	}
 }
