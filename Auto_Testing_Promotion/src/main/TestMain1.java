@@ -167,7 +167,7 @@ public class TestMain1 extends JFrame {
 			//txtRS =  webcom.getTxt();
 			log.append(webcom.textFail);
 			log.append(webcom.textRS);
-			webcom.exportData(new File("D:\\result.xls"));
+			webcom.exportData(new File("result.xls"));
 			webcom.quitDriver();
 			
 		} catch (Exception e){
