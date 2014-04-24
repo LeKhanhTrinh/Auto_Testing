@@ -43,36 +43,6 @@ public class WebdriverCommand {
 	public String textRS = "";
 	public String textFail = "";
 	
-	public WebdriverCommand(String _name, File _file) throws Exception{
-		
-		name = _name;
-		
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); 
-		
-		//FSM_G fsm1 = inputData(_file);
-		//fsm = fsm1;
-		//fsm.printState();
-		inputData(_file);
-
-	}
-	
-	public WebdriverCommand(String _name, File _file, File _file1) throws Exception{
-		
-		name = _name;
-		
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); 
-		
-		//Nhap du lieu cua fsm1 va fsm2, tao fsm_g la compo cua ca 2 fsm
-		
-		//fsm = fsm1;
-		
-		inputData(_file);
-		inputData(_file1);
-		
-	}
-	
 	public WebdriverCommand(String _name, String _folder) throws Exception{
 		
 		name = _name;
@@ -90,37 +60,6 @@ public class WebdriverCommand {
 		
 	}
 	
-	
-	//Noi tai day
-	public FSM_G composFSMs(FSM_G fsm1, FSM_G fsm2){
-		FSM_G fsm_g = fsm1;
-		//Xoa endState o fsm1
-		for (int i=0 ; i<fsm_g.getEndListState().getSize() ; i++){
-			if (fsm_g.getEndListState().getStateByIndex(i).getName().equals(fsm2.getBeginState().getName())){
-				fsm_g.getEndListState().removeStateByName(fsm2.getBeginState().getName());
-				//fsm_g.getStateList().removeStateByName(fsm2.getBeginState().getName());
-			}
-		}
-		
-		
-		//Them cac State va cac Transition tu fsm2 vao fsm 1
-		for (int i=0 ; i<fsm2.getStateList().getSize() ; i++){
-			if (!fsm2.getStateList().getStateByIndex(i).getName().equals(fsm2.getBeginState().getName())){
-				fsm_g.getStateList().addState(fsm2.getStateList().getStateByIndex(i));
-			}
-			
-		}
-		
-		for (int i=0 ; i<fsm2.getEndListState().getSize() ; i++){
-			fsm_g.getEndListState().addState(fsm2.getEndListState().getStateByIndex(i));
-		}
-		
-		
-		for (int i=0 ; i<fsm2.getTransList().getSize() ; i++){
-			fsm_g.getTransList().addTransition(fsm2.getTransList().getTransitionByIndex(i));
-		}
-		return fsm_g;
-	}
 	
 	public boolean runTestCaseWithUrl(String url, int nSleep, boolean log){
 		System.out.println("Number of Test: " + fsm.getNumOfTest());
@@ -170,7 +109,7 @@ public class WebdriverCommand {
 		//transqlist = transqlistTemp;
 		System.out.println("==============================================================================================");
 		textRS += "==========================================================================================================================\n";
-		//transqlist.printElem();
+		transqlist.printElem();
 		textRS += transqlist.logElems();
 		textRS += "========================================================================================================================\n\n";
 		System.out.println("==============================================================================================\n\n");
@@ -367,201 +306,6 @@ public class WebdriverCommand {
 		return res;
 	}
 	
-	
-	
-	
-	
-	
-	
-	public boolean run_withURL(String url, int nsleep, boolean log, int test_c){
-		boolean res = true;
-		int index = 0;
-		
-		System.out.println("runing:");
-		textRS += "runing:\n";
-		TransitionSequences_list transqlist = fsm.getPath_DFS();	//FSM SAU KHI NOI
-		//TransitionSequences temp = 
-		//TransitionSequences_list transqlistTemp = new TransitionSequences_list();
-		
-		//System.out.println("Size of Transition Sequence list: " + transqlist.getSize());
-		
-		for (int i=0 ; i<transqlist.getSize() ; ){
-			TransitionSequences transq =transqlist.getTransitionByIndex(i);
-			//System.out.println(i + ". " + checkRemove(transq, url, test_c));
-			boolean check = checkRemove(transq, url, test_c);
-			if (check){
-				transqlist.removeTransq(transq);
-				continue;
-			}
-			i++;
-		}
-		
-		//transqlist = transqlistTemp;
-		System.out.println("==============================================================================================");
-		textRS += "==========================================================================================================================\n";
-		//transqlist.printElem();
-		textRS += transqlist.logElems();
-		textRS += "========================================================================================================================\n\n";
-		System.out.println("==============================================================================================\n\n");
-		
-		for (int i=0; i<transqlist.getSize(); i++){
-			TransitionSequences transq =transqlist.getTransitionByIndex(i);
-			
-			boolean next = false;
-			driver.get(url);
-			//index = i;
-			for (int j=0 ; j<transq.getSize() ; j++){
-				Transition tran = transq.getTransitionByIndex(j);
-				if(!tran.changeTrans(driver, test_c)) {
-					next=true;
-					System.err.println("\n\nFAIL HERE");
-					textRS += "\n\nFAIL HERE!!\n";
-					break;
-				}
-			}
-			//int index = i;
-			//if (next){
-				//index--;
-				//continue;
-			//}
-			//System.err.println("So index = " + index);
-			if (log){
-				if (next){
-					//System.err.println("So index = " + index);
-					System.err.print("Test path "+(index+1)+": ");
-					textRS += "Test path "+(index+1)+": "+transq.getTransitionByIndex(0).getBeginState().getName();
-					System.err.print(transq.getTransitionByIndex(0).getBeginState().getName());
-					
-					for (int j=0; j<transq.getSize(); j++){
-						Transition tran = transq.getTransitionByIndex(j);
-						//tran.changeTrans(driver, test_c);
-						
-						Event e = tran.getEvent();
-						//State s1 = tran.getBeginState();
-						State s2 = tran.getEndState();
-						
-						System.err.print("*"+e.name+"="+s2.name);
-						textRS += "*"+e.name+"="+s2.name;
-					}
-					System.out.println();
-					textRS += "\n";
-				}else{
-					//System.out.println("So index = " + index);
-					System.out.print("Test path "+(index+1)+": ");
-					textRS += "Test path "+(index+1)+": ";
-					System.out.print(transq.getTransitionByIndex(0).getBeginState().getName());
-					textRS += transq.getTransitionByIndex(0).getBeginState().getName();
-					for (int j=0; j<transq.getSize(); j++){
-						Transition tran = transq.getTransitionByIndex(j);
-						//tran.changeTrans(driver, test_c);
-						
-						Event e = tran.getEvent();
-						//State s1 = tran.getBeginState();
-						State s2 = tran.getEndState();
-						
-						System.out.print("*"+e.name+"="+s2.name);
-						textRS += "*"+e.name+"="+s2.name;
-					}
-					System.out.println();
-					textRS += "\n";
-				}
-
-				index++;
-			}
-			
-			if (!transq.getTransitionByIndex(0).getBeginState().checkState(driver, test_c)){
-				return false;
-			}
-			
-			boolean passone = true;
-			for (int j=0; j<transq.getSize(); j++){
-				Transition tran = transq.getTransitionByIndex(j);
-				if (tran.changeTrans(driver, test_c) == false){
-					
-					Event e = tran.getEvent();
-					State s1 = tran.getBeginState();
-					State s2 = tran.getEndState();
-					//System.out.println("\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName());
-					System.err.println("\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName());
-					//System.out.println("\tFAIL TEST PATH: " + (j+1) + "\n");
-					textRS += "\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
-					System.err.println("\tFAIL");
-					textRS += "\tFAIL\n";
-					//String a="";
-					//AnsiConsole.systemInstall();
-					//AnsiConsole.out.println("\033[31m\tFAIL TEST PATH: " + (j+1) + "\n");
-					
-				}else{
-					Event e = tran.getEvent();
-					State s1 = tran.getBeginState();
-					State s2 = tran.getEndState();
-					if (next){
-						System.err.println("\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName());
-						textRS += "\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
-					}else{
-						System.out.println("\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName());
-						textRS += "\t"+(j+1)+": "+s1.getName()+"*"+e.getName()+"="+s2.getName() + "\n";
-					}
-					
-					
-					
-					//tran.printTrans();
-					// thuc thi event
-					try{
-						e.doEvent(driver, test_c);
-					} catch (Exception err){
-						passone = false;
-						System.out.println("FAIL EVENT");
-						break;
-					}
-					// check state sau do
-					if (!s2.checkState(driver, test_c)){
-						passone = false;
-						System.out.println("FAIL STATE");
-						break;
-					}
-					if (next){
-						System.err.println("\tOK");
-						textRS += "\tOK\n";
-					}else{
-						System.out.println("\tOK");
-						textRS += "\tOK\n";
-					}
-					//System.out.println("\tOK");
-					try{
-						Thread.sleep(nsleep);
-					} catch (Exception ex){
-						ex.printStackTrace();
-					}
-				}
-			}
-			
-			if (passone == false){
-				res = false;
-				System.out.println("FAILT HERE:");
-				System.out.print("Test path "+(i+1)+": ");
-				
-				System.out.print(transq.getTransitionByIndex(0).getBeginState().getName());
-				textRS += "FAILT HERE:\n" + "Test path "+(i+1)+": " + transq.getTransitionByIndex(0).getBeginState().getName();
-				for (int j=0; j<transq.getSize(); j++){
-					Transition tran = transq.getTransitionByIndex(j);
-					Event e = tran.getEvent();
-					//State s1 = tran.getBeginState();
-					State s2 = tran.getEndState();
-					
-					System.out.print("*"+e.name+"="+s2.name);
-					textRS += "*"+e.name+"="+s2.name;
-				}
-				
-				System.out.println();
-				textRS += "\n";
-			}
-			
-		}
-		
-		
-		return res;
-	}
 	
 	
 	public void test_DFS(){

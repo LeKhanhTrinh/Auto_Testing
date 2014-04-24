@@ -74,6 +74,7 @@ public class Transition {
 		}
 	}
 	*/
+	
 	public boolean changeTrans(WebDriver driver, int test_case){
 		try{
 			boolean test = true;
@@ -96,19 +97,24 @@ public class Transition {
 				//}
 				//System.out.println("LIST: "  + conditionList.getSize());
 				
-				
-				String value_tc = eh.getValueAt(transCond.getHtml_id(), test_case);
-				System.out.println("Value_tc: " + transCond.getHtml_id() + " / " + value_tc);
-				if (value_tc != null){
-					if (transCond.getHtml_id().equals(eh.getHtml_id())){
-						if (!transCond.getValues().equals(value_tc)){
-							test = false;
-						}else{
-							test = true;
-							//break;
+				// Check [guard] trong moi transition de biet trans do co thuc hien dc ko
+				if(transCond.getHtml_id() == null){
+					test = true;
+				}else{
+					String value_tc = eh.getValueAt(transCond.getHtml_id(), test_case);
+					//System.out.println("Value_tc: " + transCond.getHtml_id() + " / " + value_tc);
+					if (value_tc != null){
+						if (transCond.getHtml_id().equals(eh.getHtml_id())){
+							if (!transCond.getValues().equals(value_tc)){
+								test = false;
+							}else{
+								test = true;
+								//break;
+							}
 						}
 					}
 				}
+				
 				/*
 				for (int j=0 ; j<conditionList.getSize() ; j++){
 					
