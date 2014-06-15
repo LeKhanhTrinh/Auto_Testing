@@ -18,11 +18,6 @@ public class FSM_G {
 	private State beginState;
 	private State_list endStateList;
 	
-	public FSM_G(String _name, State_list _stateList, Transition_list _transitionList){
-		name = _name;
-		stateList=_stateList;
-		transitionList=_transitionList;
-	}
 	
 	public FSM_G(int _num, String _name, State_list _stateList, Transition_list _transitionList, State _beginState, State_list _endStateList){
 		name = _name;
@@ -159,9 +154,21 @@ public class FSM_G {
 		beginState = begin;
 	}
 	
-	///////////////////////////////////////
+	//------------------------------------------------------------------------------------------
+	//Ham functionally
+	//------------------------------------------------------------------------------------------
 	public TransitionSequences_list conVertFromPath(path PATH){
 		TransitionSequences_list transqlist = new TransitionSequences_list();
+		
+		//Khoi tao mang dem
+		int[][] count = new int [stateList.getSize()][];
+		for (int i=0 ; i<stateList.getSize() ; i++){
+			
+			count[i] = new int [stateList.getSize()];
+			for (int j=0 ; j<stateList.getSize() ; j++){
+				count[i][j] = 0;
+			}
+		}
 		
 		for (int i=0; i<PATH.getSize(); i++){
 			TransitionSequences transq = new TransitionSequences();
@@ -171,13 +178,30 @@ public class FSM_G {
 			//System.out.println("Size = " + arr1.size());
 			for (int j=0; j<arr1.size()-1; j++){
 				//System.out.println(stateList.getStateByIndex(j).getId() + " / " + stateList.getStateByIndex(j+1).getId());
-				Transition tran1 = transitionList.findBy2S(
-						stateList.getStateByIndex(arr1.get(j)), 
-						stateList.getStateByIndex(arr1.get(j+1)));
+				//Transition tran1 = transitionList.findBy2S(
+				//		stateList.getStateByIndex(arr1.get(j)), 
+				//		stateList.getStateByIndex(arr1.get(j+1)));
+				//System.out.println("Convert: " + stateList.getStateByIndex(arr1.get(j)).getName() + " -- " + tran1.getName() + " --> " + stateList.getStateByIndex(arr1.get(j+1)).getName());
 				//System.out.println("Transition: " + tran1.getName() + " / " + stateList.getStateByIndex(j).getName() + " / " + stateList.getStateByIndex(j+1).getName());
 				//System.out.println(tran1.getName());
-				transq.addTransition(tran1);
 				
+				ArrayList<Transition> listTrans = transitionList.findListBy2S(stateList.getStateByIndex(arr1.get(j)), 
+											stateList.getStateByIndex(arr1.get(j+1)));
+				
+				
+				Transition tran1;
+				
+				if (listTrans.size() > 1){
+					if (count[arr1.get(j)][arr1.get(j+1)] >= listTrans.size()){
+						tran1 = listTrans.get(listTrans.size()-1);
+					}else{
+						tran1 = listTrans.get(count[arr1.get(j)][arr1.get(j+1)]);
+					}
+				}else{
+					tran1 = listTrans.get(0);
+				}
+				count[arr1.get(j)][arr1.get(j+1)]++;
+				transq.addTransition(tran1);
 			}
 			
 			transqlist.addTransitionsq(transq);

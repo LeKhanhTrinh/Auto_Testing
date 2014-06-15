@@ -22,6 +22,20 @@ public class Transition_list {
 		return arrTransition.get(index);
 	}
 	
+	public ArrayList<Transition> findListBy2S(State s1, State s2){
+		
+		ArrayList<Transition> listTrans = new ArrayList<Transition>();
+		
+		for (int i=0; i<arrTransition.size(); i++){
+			if (s1==arrTransition.get(i).getBeginState() && s2==arrTransition.get(i).getEndState()){
+				listTrans.add(arrTransition.get(i));
+				//return arrTransition.get(i);
+			}
+		}
+		
+		return listTrans;
+	}
+
 	public Transition findBy2S(State s1, State s2){
 		
 		for (int i=0; i<arrTransition.size(); i++){

@@ -155,7 +155,8 @@ public class State {
 			
 			return true;
 		} catch (Exception e){
-			e.printStackTrace();
+			System.out.println("check fail");
+			//e.printStackTrace();
 			return false;
 		}
 	}

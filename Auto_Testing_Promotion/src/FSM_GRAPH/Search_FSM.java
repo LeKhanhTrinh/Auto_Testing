@@ -9,6 +9,7 @@ public class Search_FSM {
 	//int [][] countTransition;
 	String [][] mapTransition;
 	ArrayTransList[][] arrTranLists;
+	//ListTransitions[][] arrTransitions;
 	int N;
 	int [] overState;
 	ArrayList<Integer> arrEndSt;
@@ -56,7 +57,6 @@ public class Search_FSM {
 				mapTransition[i][j]="";
 			}
 		}
-		
 		//Lay cac gia tri cua endStateList
 		for (int i=0 ; i<fsm.getSizeOfEndStateList() ; i++){
 			
@@ -88,6 +88,17 @@ public class Search_FSM {
 			for (int j=0 ; j<N ; j++){
 				if (tempName.equals(fsm.getNameStateByIndex(j))){
 					arrEndSt.add(j);
+				}
+			}
+		}
+		
+		
+		for (int i=0; i<N; i++){
+			for (int j=0; j<N; j++){
+				if (arrTranLists[i][j].getSize() > 0){
+					//arrTranLists[i][j].RemoveHead();
+					System.out.println(i + "; " + j + ": " + arrTranLists[i][j].printAll());
+					
 				}
 			}
 		}
@@ -129,7 +140,7 @@ public class Search_FSM {
 		
 		for (int j=0; j<N; j++){
 			
-			if (arrTranLists[i][j].getSize()>0 && overState[j]!=1 && overTransition[i][j]==2){
+			if (arrTranLists[i][j].getSize()>0 && overTransition[i][j]==2){
 				t++;
 				
 				//overState[j]=1;
@@ -222,22 +233,8 @@ public class Search_FSM {
 		return false;
 	}
 	
-	public void addPath(path PATH){
-		
-		for (int i=0; i<N; i++){
-			for (int j=0; j<N; j++){
-				if (mapTransition[i][j].length()>0 && overTransition[i][j]==2){
-					//System.out.println(""+i+"_"+j);
-					ArrayList<Integer> t = PATH.getIfEndBy(i);
-					t.add(j);
-					PATH.Add(t);
-				}
-				
-			}
-				
-		}
-	}
 	
+	/*
 	public static ArrayList<String> getTransition(String input){
 		ArrayList<String> result = new ArrayList<String>();
 		while (input != null){
@@ -258,7 +255,10 @@ public class Search_FSM {
 		}
 		return result;
 	}
+	*/
 }
+
+
 
 class ArrayTransList{
 	ArrayList<String> arrList;

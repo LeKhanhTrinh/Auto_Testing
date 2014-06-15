@@ -57,7 +57,7 @@ public class WebdriverCommand {
 		  System.out.println(f.getName());
 		}
 	    fsm.printState();
-		
+		fsm.printTransition();
 	}
 	
 	
@@ -308,25 +308,7 @@ public class WebdriverCommand {
 	
 	
 	
-	public void test_DFS(){
-		TransitionSequences_list transqlist = fsm.getPath_DFS();	//FSM SAU KHI NOI
-		System.out.println(transqlist.getSize());
-		
-		for (int i=0; i<transqlist.getSize(); i++){
-			TransitionSequences transq =transqlist.getTransitionByIndex(i);
-			for (int j=0; j<transq.getSize(); j++){
-				Transition tran = transq.getTransitionByIndex(j);
-				Event e = tran.getEvent();
-				State s1 = tran.getBeginState();
-				State s2 = tran.getEndState();
-				
-				System.out.println(s1.name+"*"+e.name+"="+s2.name);
-			}
-			System.out.println("---------------------------------");
-		}
-		
-		
-	}
+	
 	
 	
 	// ham input du lieu tu file excel

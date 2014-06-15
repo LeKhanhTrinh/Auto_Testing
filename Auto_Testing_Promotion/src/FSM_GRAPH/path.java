@@ -34,32 +34,7 @@ public class path {
 	public int getLastElemFromPathNumber(int index){
 		return arrPath.get(index).get(arrPath.get(index).size()-1);
 	}
-	
-	public ArrayList<Integer> getIfEndBy(int e){
-		int ai=0;
-		int al=0;
-		for (int i=0; i<arrPath.size(); i++){
-			ArrayList<Integer> t = arrPath.get(i);
-			for (int k=0; k<t.size(); k++){
-				if (e==t.get(k).intValue()){
-					ai = i;
-					al = k;
-					break;
-				}
-			}
-		}
-		
-		
-		
-		ArrayList<Integer> t = arrPath.get(ai);
-			
-		ArrayList<Integer> t1 = new ArrayList<Integer>();
-		for (int k=0; k<=al; k++){
-			t1.add(t.get(k));
-		}
-		return t1;
 
-	}
 	
 	
 	public void sort(){

@@ -11,7 +11,7 @@ import HTML_Element.Element_html;
 
 public class Event {
 	String name;
-	int element_id;
+	//int element_id;
 	String element_html_id;
 	String action;
 	Elem_html_list elem_html_list;
@@ -23,20 +23,13 @@ public class Event {
 		elem_html_list=_elem_html_list;
 	}
 	
-	public Event(String _name, int _e, String _a, Elem_html_list _elem_html_list){
-		name=_name;
-		element_id=_e;
-		action=_a;
-		elem_html_list=_elem_html_list;
-	}
+	
 	
 	public String getName(){
 		return name;
 	}
 	
-	public int getElemId(){
-		return element_id;
-	}
+	
 	
 	public String getAction(){
 		return action;

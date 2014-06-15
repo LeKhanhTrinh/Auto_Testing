@@ -1,7 +1,5 @@
 package TestPath2Webdriver;
 
-import java.util.ArrayList;
-
 import org.openqa.selenium.WebDriver;
 
 import HTML_Element.Elem_html_list;
@@ -20,20 +18,8 @@ public class Transition {
 	Condition transCond;
 	//Condition_list conditionList;
 	
-	public ArrayList<String> subStateCompValue = new ArrayList<String>();	//(id/value)
+		//(id/value)
 	
-	public Transition(Event _e, State s1, State s2){
-		event=_e;
-		beginState=s1;
-		endState=s2;
-	}
-	
-	public Transition(Event _e, State s1, State s2, String input){
-		event=_e;
-		beginState=s1;
-		endState=s2;
-		//conditionList = new Condition_list(input);
-	}
 	
 	public Transition(Event e, State s1, State s2, Condition c){
 		beginState = s1;
@@ -202,12 +188,7 @@ public class Transition {
 	}
 	
 	
-	public void removeTrans(){
-		beginState = null;
-		event = null;
-		endState = null;
-		//conditionList = null;
-	}
+	
 	
 	public String logTrans(){
 		String trans = "\t"+beginState.getName() + "---->" + endState.getName() + "\n";
@@ -217,7 +198,7 @@ public class Transition {
 	
 	public void printTrans(){
 		//System.out.println("\t"+beginState.getName() + "--" + event.getName() + "-->" + endState.getName() + "\n\tCondition:");
-		System.out.println("\t"+beginState.getName() + "---->" + endState.getName());
+		System.out.println("\t"+beginState.getName() + "----" + event.getName() + "---->" + endState.getName());
 		//System.out.println("\t"+beginState.getName() + "---->" + endState.getName());
 		//for (int i=0 ; i<conditionList.getSize() ; i++){
 		//	conditionList.arr_compo.get(i).printEL();
